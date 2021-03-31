@@ -47,28 +47,25 @@ def score(y_true, y_predict, percent=None, function=accuracy):
     if percent > 1:
         ind = np.argsort(y_predict[:, 1])[::-1]
         y_predict = np.take_along_axis(y_predict[:, 1], ind, axis=0)
-        y_predict = (y_predict >= percent / 100).astype(float)
+        y_predict = (y_predict >= 0.5).astype(float)
         y_true = np.take_along_axis(y_true, ind, axis=0)
-        score = []
-        per = int(len(y_true) / 100)
-        for n in np.arange(per, 100 * per, per):
-            score.append(function(y_true[:n], y_predict[:n]))
-        return np.array(score)
+        n = int(len(y_true) * percent / 100)
+        return function(y_true[:n], y_predict[:n])
 
 def precision_score(y_true, y_predict, percent=None):
-    return score(y_true, y_predict, percent=None, function=precision)
+    return score(y_true, y_predict, percent=percent, function=precision)
 
 def recall_score(y_true, y_predict, percent=None):
-    return score(y_true, y_predict, percent=None, function=recall)
+    return score(y_true, y_predict, percent=percent, function=recall)
 
 def accuracy_score(y_true, y_predict, percent=None):
-    return score(y_true, y_predict, percent=None, function=accuracy)
+    return score(y_true, y_predict, percent=percent, function=accuracy)
 
 def lift_score(y_true, y_predict, percent=None):
-    return score(y_true, y_predict, percent=None, function=lift)
+    return score(y_true, y_predict, percent=percent, function=lift)
 
 def f1_score(y_true, y_predict, percent=None):
-    return score(y_true, y_predict, percent=None, function=f1)
+    return score(y_true, y_predict, percent=percent, function=f1)
 
 
 
